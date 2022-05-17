@@ -74,6 +74,11 @@ public class OperatingSystem {
 	}
 
 
+	/**
+	 * 
+	 * @return Los procesos que se van agregando a la lista, estos toca ir actualizando
+	 * cada que se agregan a la interfaz
+	 */
 	public Queue<MyProcess> getProcessQueue() {
 		return processQueueReady;
 	}
