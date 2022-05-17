@@ -35,7 +35,6 @@ public class OperatingSystem {
 	private MyProcess search(String name) {
 		Node<MyProcess> temp = processQueueReady.peek();
 		while (temp != null) {
-			System.out.println(temp.getData().getName() + "  " + name);
 			if (temp.getData().getName().equals(name)) {
 				return temp.getData();
 			} else {
@@ -94,8 +93,68 @@ public class OperatingSystem {
 		}
 	}
 
+	/**
+	 * 
+	 * @return Procesos terminados
+	 */
 	public ArrayList<MyProcess> getProcessTerminated() {
 		return processTerminated;
+	}
+
+	/**
+	 * 
+	 * @return Lista de los procesos listos
+	 */
+	public ArrayList<MyProcess> getReadyProccess() {
+		return readyAndDespachado;
+	}
+
+	/**
+	 * 
+	 * @return Procesos despachados
+	 */
+	public ArrayList<MyProcess> getProcessDespachados() {
+		return readyAndDespachado;
+	}
+
+	/**
+	 * 
+	 * @return  Processos en ejecucion
+	 */
+	public ArrayList<MyProcess> getExecuting() {
+		return executing;
+	}
+
+	/**
+	 * 
+	 * @return Procesos expirados
+	 */
+	public ArrayList<MyProcess> getProcessExpired() {
+		return expired;
+	}
+
+	/**
+	 * 
+	 * @return Los que pasan a bloqueado
+	 */
+	public ArrayList<MyProcess> getProcessToLocked() {
+		return lockedAndWakeUp;
+	}
+
+	/**
+	 * 
+	 * @return Porcesos bloqueados
+	 */
+	public ArrayList<MyProcess> getProcessLocked() {
+		return lockedAndWakeUp;
+	}
+
+	/**
+	 * 
+	 * @return Procesos despertados
+	 */
+	public ArrayList<MyProcess> getProcessWakeUp() {
+		return lockedAndWakeUp;
 	}
 
 	public void start() {
@@ -108,26 +167,36 @@ public class OperatingSystem {
 		for (MyProcess myProcess : readyAndDespachado) {
 			System.out.println(myProcess.toString());
 		}
-//		System.out.println("-------------Bloqueados---------------");
-//		for (MyProcess myProcess : lockedAndWakeUp) {
-//			System.out.println(myProcess.toString());
-//		}
-//		System.out.println("-------------Ejecucion---------------");
-//		for (MyProcess myProcess : executing) {
-//			System.out.println(myProcess.toString());
-//		}
-//		System.out.println("-------------Expirados---------------");
-//		for (MyProcess myProcess : expired) {
-//			System.out.println(myProcess.toString());
-//		}
-//		System.out.println("-------------Terminados---------------");
-//		for (MyProcess myProcess : processTerminated) {
-//			System.out.println(myProcess.toString());
-//		}
-//		System.out.println("-------------Despertados---------------");
-//		for (MyProcess myProcess : despertados) {
-//			System.out.println(myProcess.toString());
-//		}
+		
+		System.out.println("-------------despachados---------------");
+		for (MyProcess myProcess : readyAndDespachado) {
+			System.out.println(myProcess.toString());
+		}
+		System.out.println("-------------Ejecucion---------------");
+		for (MyProcess myProcess : executing) {
+			System.out.println(myProcess.toString());
+		}
+		
+		System.out.println("-------------Bloquear---------------");
+		for (MyProcess myProcess : lockedAndWakeUp) {
+			System.out.println(myProcess.toString());
+		}
+		System.out.println("-------------Bloqueados---------------");
+		for (MyProcess myProcess : lockedAndWakeUp) {
+			System.out.println(myProcess.toString());
+		}		
+		System.out.println("-------------despertar---------------");
+		for (MyProcess myProcess : lockedAndWakeUp) {
+			System.out.println(myProcess.toString());
+		}
+		System.out.println("-------------Expirados---------------");
+		for (MyProcess myProcess : expired) {
+			System.out.println(myProcess.toString());
+		}
+		System.out.println("-------------Terminados---------------");
+		for (MyProcess myProcess : processTerminated) {
+			System.out.println(myProcess.toString());
+		}
 	}
 
 	
