@@ -1,6 +1,5 @@
 package views;
 
-import presenters.Events;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,11 +20,11 @@ public class AddProcessDialog extends JDialog {
         setLocationRelativeTo(null);
     }
 
-    public String getProcessName(){
+    public String getProcessName() throws Exception {
         return addProcessPanel.getProcessName();
     }
 
-    public int getProcessTime(){
+    public int getProcessTime() throws Exception, NumberFormatException{
         return addProcessPanel.getProcessTime();
     }
 

@@ -2,9 +2,11 @@ package views;
 
 import models.MyProcess;
 import models.OperatingSystem;
+import presenters.Events;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class ReportsPanel extends JPanel {
@@ -14,13 +16,11 @@ public class ReportsPanel extends JPanel {
     public ReportsPanel(ArrayList<MyProcess> readyProcess, ArrayList<MyProcess> dispatchedProcess,
                         ArrayList<MyProcess> executingProcess, ArrayList<MyProcess> toLockedProcess,
                         ArrayList<MyProcess> lockedProcess, ArrayList<MyProcess> wakeUpProcess,
-                        ArrayList<MyProcess> expiredProcess, ArrayList<MyProcess> terminatedProcess) {
+                        ArrayList<MyProcess> expiredProcess, ArrayList<MyProcess> terminatedProcess, ActionListener listener) {
         setLayout(new BorderLayout());
         setBackground(Color.decode("#FDFEFE"));
-        JLabel titleLb = new JLabel("REPORTES");
-        titleLb.setFont(new Font("Arial", Font.BOLD, 20));
-        titleLb.setHorizontalAlignment(SwingConstants.CENTER);
-        add(titleLb, BorderLayout.NORTH);
+        setBorder(BorderFactory.createLineBorder(Color.BLACK, 2, true));
+        initTitle(listener);
         JTabbedPane reports = new JTabbedPane();
         reports.setBackground(Color.decode("#FDFEFE"));
         TablePanel readyTable = new TablePanel(OperatingSystem.processInfo(readyProcess), COLUMNS);
@@ -46,7 +46,34 @@ public class ReportsPanel extends JPanel {
 
         TablePanel terminatedTable = new TablePanel(OperatingSystem.processInfo(terminatedProcess), COLUMNS);
         reports.add("terminados", terminatedTable);
-
         add(reports, BorderLayout.CENTER);
+
+        JButton newSimulationBtn = createBtn("Nueva simulacion", Color.decode("#2980B9"), listener,
+                                            Events.NEW_SIMULATION.toString());
+        newSimulationBtn.setFont(new Font("Arial", Font.BOLD, 16));
+        newSimulationBtn.setPreferredSize(new Dimension(100, 40));
+        add(newSimulationBtn, BorderLayout.SOUTH);
+    }
+
+    private void initTitle(ActionListener listener){
+        MyGridPanel titlePanel = new MyGridPanel();
+        titlePanel.setBackground(Color.decode("#FDFEFE"));
+        JLabel titleLb = new JLabel("REPORTES");
+        titleLb.setFont(new Font("Arial", Font.BOLD, 20));
+        titleLb.setHorizontalAlignment(SwingConstants.CENTER);
+        add(titleLb, BorderLayout.NORTH);
+        titlePanel.addComponent(titleLb, 3, 1, 6, 0.1);
+        JButton exitBtn = createBtn("Salir", Color.RED, listener, Events.EXIT.toString());
+        titlePanel.addComponent(exitBtn, 10, 1, 2, 0.1);
+        add(titlePanel, BorderLayout.NORTH);
+    }
+
+    private JButton createBtn(String txt, Color color, ActionListener listener, String command){
+        JButton btn = new JButton(txt);
+        btn.setForeground(Color.WHITE);
+        btn.setBackground(color);
+        btn.addActionListener(listener);
+        btn.setActionCommand(command);
+        return btn;
     }
 }

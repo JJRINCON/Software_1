@@ -15,6 +15,7 @@ public class MainFrame extends JFrame {
 
     public MainFrame(ActionListener listener) {
         this.listener = listener;
+        setUndecorated(true);
         setTitle(TITLE);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         initProcessesPanel();
@@ -36,5 +37,9 @@ public class MainFrame extends JFrame {
                                  ArrayList<MyProcess> expiredProcess, ArrayList<MyProcess> terminatedProcess){
         mainPanel.initReportsPanel(readyProcess, dispatchedProcess, executingProcess, toLockedProcess,
                                     lockedProcess, wakeUpProcess, expiredProcess, terminatedProcess);
+    }
+
+    public void initStartSimulationPanel(ActionListener listener){
+        mainPanel.initStartSimulationPanel(listener);
     }
 }

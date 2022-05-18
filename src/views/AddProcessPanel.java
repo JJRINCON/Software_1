@@ -18,7 +18,7 @@ public class AddProcessPanel extends MyGridPanel{
         initComponents(listener);
     }
 
-    private void initComponents(ActionListener listener){
+    private void initComponents(ActionListener listener) {
         initTitle();
         initProcessNameTxt();
         initProcessTimeTxt();
@@ -41,10 +41,11 @@ public class AddProcessPanel extends MyGridPanel{
         addComponent(new JLabel(" "), 0, 6, 11, 0.1);
     }
 
-    private void initProcessTimeTxt(){
+    private void initProcessTimeTxt() {
         JLabel timeLb = createLb("   Tiempo: ", new Font("Arial", Font.BOLD, 14));
         addComponent(timeLb, 2, 7, 2, 0.1);
         processTimeTxt = new JTextField();
+        processTimeTxt.setText("");
         addComponent(processTimeTxt, 5, 7, 5, 0.1);
         addComponent(new JLabel(" "), 0, 8, 11, 0.1);
     }
@@ -82,12 +83,21 @@ public class AddProcessPanel extends MyGridPanel{
         return btn;
     }
 
-    public String getProcessName(){
-        return processNameTxt.getText();
+    public String getProcessName() throws Exception {
+        if(!processNameTxt.getText().isEmpty()){
+            return processNameTxt.getText();
+        }else{
+            throw new Exception("El proceso debe tener un nombre");
+        }
     }
 
-    public int getProcessTime(){
-        return Integer.parseInt(processTimeTxt.getText());
+    public int getProcessTime() throws Exception, NumberFormatException {
+        String text = processTimeTxt.getText();
+        if(!text.isEmpty()){
+            return Integer.parseInt(text);
+        }else{
+            throw new Exception("El proceso debe tener un tiempo");
+        }
     }
 
     public boolean getIsBlocked(){

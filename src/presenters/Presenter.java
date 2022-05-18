@@ -1,7 +1,9 @@
 package presenters;
 
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.ParseException;
 
 import javax.swing.JOptionPane;
 
@@ -42,6 +44,12 @@ public class Presenter implements ActionListener {
 			case INIT:
 				manageInitAction();
 				break;
+			case NEW_SIMULATION:
+				manageNewSimulationAction();
+				break;
+			case EXIT:
+				System.exit(0);
+				break;
 		}
 	}
 
@@ -51,10 +59,20 @@ public class Presenter implements ActionListener {
 	}
 
 	private void manageAcceptAction() {
-		operatingSystem.addProcess(new MyProcess(addProcessDialog.getProcessName(), addProcessDialog.getProcessTime(),
-									addProcessDialog.getIsBlocked()));
-		addProcessDialog.dispose();
-		mainFrame.updateProcesses(operatingSystem.getProcessInfo());
+		try {
+			if(operatingSystem.verifyProcessName(addProcessDialog.getProcessName())){
+				operatingSystem.addProcess(new MyProcess(addProcessDialog.getProcessName(), addProcessDialog.getProcessTime(),
+						addProcessDialog.getIsBlocked()));
+				addProcessDialog.dispose();
+				mainFrame.updateProcesses(operatingSystem.getProcessInfo());
+			}else{
+				JOptionPane.showMessageDialog(mainFrame, "Nombre de proceso no disponible", "ERROR!!!", JOptionPane.ERROR_MESSAGE);
+			}
+		} catch (NumberFormatException e) {
+			JOptionPane.showMessageDialog(mainFrame, "Debe ingresar unicamente numeros", "ERROR!!!", JOptionPane.ERROR_MESSAGE);
+		} catch (Exception ne){
+			JOptionPane.showMessageDialog(mainFrame, ne.getMessage(), "ERROR!!!", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 
 	private void manageCancelAction() {
@@ -66,5 +84,12 @@ public class Presenter implements ActionListener {
 		mainFrame.initReportsPanel(operatingSystem.getReadyProccess(), operatingSystem.getProcessDespachados(),
 				operatingSystem.getExecuting(), operatingSystem.getProcessToLocked(), operatingSystem.getProcessLocked(),
 				operatingSystem.getProcessWakeUp(), operatingSystem.getProcessExpired(), operatingSystem.getProcessTerminated());
+	}
+
+	private void manageNewSimulationAction() {
+		operatingSystem = new OperatingSystem();
+		Object[][] empty = {};
+		mainFrame.updateProcesses(empty);
+		mainFrame.initStartSimulationPanel(this);
 	}
 }

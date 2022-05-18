@@ -94,6 +94,19 @@ public class OperatingSystem {
 		}
 		return processInfo;
 	}
+
+	public boolean verifyProcessName(String name) throws Exception {
+		Node<MyProcess> temp = processQueueReady.peek();
+		boolean aux = true;
+		while(temp != null){
+			if(temp.getData().getName().equals(name)){
+				aux = false;
+			}
+			temp = temp.getNext();
+		}
+		return aux;
+	}
+
 	public MyProcess getProcessInExecition() {
 		return processInExecition;
 	}
