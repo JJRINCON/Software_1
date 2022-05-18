@@ -27,6 +27,16 @@ public class Queue<T> {
 		return tempNode.getData();
 	}
 
+	public int size(){
+		int size = 0;
+		Node<T> actualNode = firstNode;
+		while(actualNode != null){
+			size++;
+			actualNode = actualNode.getNext();
+		}
+		return size;
+	}
+
 	public boolean isEmpty() {
 		return firstNode == null;
 	}

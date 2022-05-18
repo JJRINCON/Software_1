@@ -8,34 +8,63 @@ import javax.swing.JOptionPane;
 import models.MyProcess;
 import models.OperatingSystem;
 import models.Queue;
+import views.AddProcessDialog;
+import views.MainFrame;
 
 public class Presenter implements ActionListener {
 
 	private OperatingSystem operatingSystem;
+	private MainFrame mainFrame;
+	private AddProcessDialog addProcessDialog;
 
 	public Presenter() {
-		init();
+		operatingSystem = new OperatingSystem();
+		initFrame();
 	}
 
-	private void init() {
-		Queue<MyProcess> queue = new Queue<>();
-		operatingSystem = new OperatingSystem(queue);
-		operatingSystem.addProcess(new MyProcess("P1", 10, true));
-		operatingSystem.addProcess(new MyProcess("P2", 5, false));
-		operatingSystem.addProcess(new MyProcess("P3", 8, true));
-		operatingSystem.addProcess(new MyProcess("P4", 10, false));
-		operatingSystem.addProcess(new MyProcess("P5", 3, false));
-		try {
-			operatingSystem.startSimulation();
-		} catch (InterruptedException e1) {
-			e1.printStackTrace();
-		}
-		operatingSystem.showProcess();
+	private void initFrame(){
+		mainFrame = new MainFrame(this);
+		mainFrame.setVisible(true);
 	}
-
-
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		switch (Events.valueOf(e.getActionCommand())){
+			case ADD:
+				manageAddAction();
+				break;
+			case ACEPT:
+				manageAcceptAction();
+				break;
+			case CANCEL:
+				manageCancelAction();
+				break;
+			case INIT:
+				manageInitAction();
+				break;
+		}
+	}
+
+	private void manageAddAction() {
+		addProcessDialog = new AddProcessDialog(this, mainFrame);
+		addProcessDialog.setVisible(true);
+	}
+
+	private void manageAcceptAction() {
+		operatingSystem.addProcess(new MyProcess(addProcessDialog.getProcessName(), addProcessDialog.getProcessTime(),
+									addProcessDialog.getIsBlocked()));
+		addProcessDialog.dispose();
+		mainFrame.updateProcesses(operatingSystem.getProcessInfo());
+	}
+
+	private void manageCancelAction() {
+		addProcessDialog.dispose();
+	}
+
+	private void manageInitAction() {
+		operatingSystem.startSimulation();
+		mainFrame.initReportsPanel(operatingSystem.getReadyProccess(), operatingSystem.getProcessDespachados(),
+				operatingSystem.getExecuting(), operatingSystem.getProcessToLocked(), operatingSystem.getProcessLocked(),
+				operatingSystem.getProcessWakeUp(), operatingSystem.getProcessExpired(), operatingSystem.getProcessTerminated());
 	}
 }

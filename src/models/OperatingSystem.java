@@ -11,11 +11,9 @@ public class OperatingSystem {
 	private ArrayList<MyProcess> expired;
 	private ArrayList<MyProcess> processTerminated;
 	private MyProcess processInExecition;
-	private Thread thread;
 
-	public OperatingSystem(Queue<MyProcess> processQueue) {
-		super();
-		this.processQueueReady = processQueue;
+	public OperatingSystem() {
+		this.processQueueReady = new Queue<>();
 		this.lockedAndWakeUp = new ArrayList<>();
 		this.processTerminated = new ArrayList<>();
 		executing = new ArrayList<>();
@@ -44,7 +42,7 @@ public class OperatingSystem {
 		return null;
 	}
 
-	public void startSimulation() throws InterruptedException {
+	public void startSimulation() {
 		while (!processQueueReady.isEmpty()) {
 			MyProcess process = processQueueReady.peek().getData();
 			valideSystemTimer(process);
@@ -83,6 +81,19 @@ public class OperatingSystem {
 		return processQueueReady;
 	}
 
+	public Object[][] getProcessInfo(){
+		Object[][] processInfo = new Object[processQueueReady.size()][3];
+		Node<MyProcess> temp = processQueueReady.peek();
+		int count = 0;
+		while (temp != null) {
+			processInfo[count][0] = temp.getData().getName();
+			processInfo[count][1] = temp.getData().getTime();
+			processInfo[count][2] = temp.getData().isLocked();
+			temp = temp.getNext();
+			count++;
+		}
+		return processInfo;
+	}
 	public MyProcess getProcessInExecition() {
 		return processInExecition;
 	}
@@ -162,10 +173,16 @@ public class OperatingSystem {
 		return lockedAndWakeUp;
 	}
 
-	public void start() {
-		thread.start();
+	public static Object[][] processInfo(ArrayList<MyProcess> processes){
+		Object[][] processInfo = new Object[processes.size()][3];
+		for (int i = 0; i < processes.size(); i++) {
+			processInfo[i][0] = processes.get(i).getName();
+			processInfo[i][1] = processes.get(i).getTime();
+			processInfo[i][2] = processes.get(i).isLocked();
+		}
+		return processInfo;
 	}
-	
+
 	public void showProcess() {
 		
 		System.out.println("-------------Listos---------------");
