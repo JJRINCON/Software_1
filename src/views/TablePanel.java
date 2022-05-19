@@ -29,6 +29,7 @@ public class TablePanel extends JPanel {
                 return false;
             }
         };
+        table.setDefaultRenderer(Object.class, new ImgTable());
         table.setModel(model);
         table.getTableHeader().setReorderingAllowed(false);
         table.getTableHeader().setBackground(Color.decode("#1B88E3"));
