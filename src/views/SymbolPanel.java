@@ -39,12 +39,4 @@ public class SymbolPanel extends JPanel {
         g2.drawLine((int)(width * 0.45), (int)(height * 0.2), (int)(width * 0.55), (int)(height * 0.8));
         g2.drawLine((int)(width * 0.55), (int)(height * 0.2), (int)(width * 0.45), (int)(height * 0.8));
     }
-
-    public static void main(String[] args) {
-        JFrame frame = new JFrame();
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.setExtendedState(Frame.MAXIMIZED_BOTH);
-        frame.add(new SymbolPanel(false));
-        frame.setVisible(true);
-    }
 }
