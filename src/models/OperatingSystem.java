@@ -2,6 +2,7 @@ package models;
 
 import java.util.ArrayList;
 
+
 public class OperatingSystem {
 
 	private Queue<MyProcess> processQueueReady;
@@ -30,6 +31,65 @@ public class OperatingSystem {
 		return false;
 	}
 
+	/**
+	 * Me avisa si no funciona, xd
+	 * @param actualName
+	 * @param name
+	 * @param time
+	 * @param lockedStatus
+	 */
+	public void editProcess(String actualName, String name, int time, boolean lockedStatus) {
+		edit(search(actualName), name, time, lockedStatus);
+		edit(searchInList(actualName, readyAndDespachado), name, time, lockedStatus);
+	}
+	
+	private void edit(MyProcess myProcess, String name, int time, boolean lockedStatus) {
+		myProcess.setName(name);
+		myProcess.setTime(time);
+		myProcess.setLocked(lockedStatus);
+	}
+	
+	/**
+	 * Eliminar de la cola y de la lista de listos
+	 * @param name
+	 * @return
+	 */
+	public boolean deleteProccess(String name) {
+		boolean isDelete = false;
+		Node<MyProcess> temp = processQueueReady.peek();
+		readyAndDespachado.remove(searchInList(name, readyAndDespachado));
+		if (temp.getData().getName().equals(name)) {
+			processQueueReady.pop();
+			isDelete = true;
+		}else {
+			isDelete = deleteProcess(name, isDelete, temp);
+		}	
+		return isDelete;
+	}
+
+	private boolean deleteProcess(String name, boolean isDelete, Node<MyProcess> temp) {
+		while (temp.getNext() != null) {
+			if (temp.getNext().getData().getName().equals(name)) {
+				temp.setNext(temp.getNext().getNext());
+				isDelete = true;
+			} else {
+				temp = temp.getNext();
+			}
+		}
+		return isDelete;
+	}
+	
+	
+	private MyProcess searchInList(String name, ArrayList<MyProcess> myProcesses) {
+		for (MyProcess myProcess : myProcesses) {
+			if (name.equals(myProcess.getName())) {
+				return myProcess;
+			}
+		}
+		return null;
+	}
+	
+	
 	private MyProcess search(String name) {
 		Node<MyProcess> temp = processQueueReady.peek();
 		while (temp != null) {
@@ -203,5 +263,6 @@ public class OperatingSystem {
 		}
 		return processInfo;
 	}
+	
 	
 }

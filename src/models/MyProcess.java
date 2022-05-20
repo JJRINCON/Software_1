@@ -17,6 +17,10 @@ public class MyProcess {
 		return name;
 	}
 
+	public void setName(String name) {
+		this.name = name;
+	}
+	
 	public double getTime() {
 		return time;
 	}
