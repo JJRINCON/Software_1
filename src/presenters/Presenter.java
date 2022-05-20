@@ -9,7 +9,6 @@ import javax.swing.JOptionPane;
 
 import models.MyProcess;
 import models.OperatingSystem;
-import models.Queue;
 import views.AddProcessDialog;
 import views.MainFrame;
 
@@ -50,6 +49,14 @@ public class Presenter implements ActionListener {
 			case EXIT:
 				System.exit(0);
 				break;
+		case DELETE:
+			break;
+		case EXPIRED:
+			break;
+		case SEARCH:
+			break;
+		default:
+			break;
 		}
 	}
 
