@@ -5,10 +5,12 @@ import java.awt.*;
 
 public class SymbolPanel extends JPanel {
 
-    private boolean blocked;
+    private final boolean blocked;
+    private final boolean isReport;
 
-    public SymbolPanel(boolean blocked){
+    public SymbolPanel(boolean blocked, boolean isReport){
         setBackground(Color.decode("#FDFEFE"));
+        this.isReport = isReport;
         this.blocked = blocked;
     }
 
@@ -30,13 +32,23 @@ public class SymbolPanel extends JPanel {
 
     private void paintBlocked(Graphics2D g2 ,int width, int height){
         g2.setColor(Color.GREEN);
-        g2.drawLine((int)(width * 0.45), (int)(height * 0.55), (int)(width * 0.5), (int)(height * 0.8));
-        g2.drawLine((int)(width * 0.5), (int)(height * 0.8), (int)(width * 0.55), (int)(height * 0.2));
+        if(isReport){
+            g2.drawLine((int)(width * 0.45), (int)(height * 0.55), (int)(width * 0.5), (int)(height * 0.8));
+            g2.drawLine((int)(width * 0.5), (int)(height * 0.8), (int)(width * 0.55), (int)(height * 0.2));
+        }else{
+            g2.drawLine((int)(width * 0.15), (int)(height * 0.57), (int)(width * 0.35), (int)(height * 0.7));
+            g2.drawLine((int)(width * 0.35), (int)(height * 0.7), (int)(width * 0.5), (int)(height * 0.3));
+        }
     }
 
-    private void paintNoBlocked(Graphics2D g2 ,int width, int height){
+    private void paintNoBlocked(Graphics2D g2 ,int width, int height) {
         g2.setColor(Color.RED);
-        g2.drawLine((int)(width * 0.45), (int)(height * 0.2), (int)(width * 0.55), (int)(height * 0.8));
-        g2.drawLine((int)(width * 0.55), (int)(height * 0.2), (int)(width * 0.45), (int)(height * 0.8));
+        if (isReport) {
+            g2.drawLine((int)(width * 0.45), (int)(height * 0.2), (int)(width * 0.55), (int)(height * 0.8));
+            g2.drawLine((int)(width * 0.55), (int)(height * 0.2), (int)(width * 0.45), (int)(height * 0.8));
+        }else{
+            g2.drawLine((int)(width * 0.15), (int)(height * 0.3), (int)(width * 0.45), (int)(height * 0.7));
+            g2.drawLine((int)(width * 0.45), (int)(height * 0.3), (int)(width * 0.15), (int)(height * 0.7));
+        }
     }
 }

@@ -2,8 +2,10 @@ package views;
 
 
 import models.MyProcess;
+import models.Queue;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
@@ -16,6 +18,7 @@ public class MainFrame extends JFrame {
     public MainFrame(ActionListener listener) {
         this.listener = listener;
         setUndecorated(true);
+        getContentPane().setLayout(new GridLayout(1,1));
         setTitle(TITLE);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         initProcessesPanel();
@@ -27,8 +30,8 @@ public class MainFrame extends JFrame {
         add(mainPanel);
     }
 
-    public void updateProcesses(Object[][] info){
-        mainPanel.updateProcesses(info);
+    public void updateProcesses(Queue<MyProcess> processQueue){
+        mainPanel.updateProcesses(processQueue);
     }
 
     public void initReportsPanel(ArrayList<MyProcess> readyProcess, ArrayList<MyProcess> dispatchedProcess,
@@ -39,7 +42,10 @@ public class MainFrame extends JFrame {
                                     lockedProcess, wakeUpProcess, expiredProcess, terminatedProcess);
     }
 
-    public void initStartSimulationPanel(ActionListener listener){
-        mainPanel.initStartSimulationPanel(listener);
+    public void newSimulation(){
+        getContentPane().remove(mainPanel);
+        mainPanel = new MainPanel(listener);
+        add(mainPanel);
+        getContentPane().revalidate();
     }
 }

@@ -1,11 +1,9 @@
 package presenters;
 
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.ParseException;
 
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
 import models.MyProcess;
 import models.OperatingSystem;
@@ -17,6 +15,7 @@ public class Presenter implements ActionListener {
 	private OperatingSystem operatingSystem;
 	private MainFrame mainFrame;
 	private AddProcessDialog addProcessDialog;
+	private AddProcessDialog editProcessDialog;
 
 	public Presenter() {
 		operatingSystem = new OperatingSystem();
@@ -34,7 +33,7 @@ public class Presenter implements ActionListener {
 			case ADD:
 				manageAddAction();
 				break;
-			case ACEPT:
+			case ACCEPT:
 				manageAcceptAction();
 				break;
 			case CANCEL:
@@ -46,37 +45,42 @@ public class Presenter implements ActionListener {
 			case NEW_SIMULATION:
 				manageNewSimulationAction();
 				break;
+			case EDIT:
+				manageEditAction(e);
+				break;
+			case DELETE:
+				manageDeleteAction(e);
+				break;
+			case ACCEPT_EDIT:
+				manageAcceptEditAction(e);
+				break;
+			case CANCEL_EDIT:
+				manageCancelEditAction();
+				break;
+			case EXPORT:
+				manageExportAction();
+				break;
 			case EXIT:
 				System.exit(0);
 				break;
-		case DELETE:
-			break;
-		case EXPIRED:
-			break;
-		case SEARCH:
-			break;
-		default:
-			break;
 		}
 	}
 
 	private void manageAddAction() {
-		addProcessDialog = new AddProcessDialog(this, mainFrame);
+		addProcessDialog = new AddProcessDialog(this, false);
 		addProcessDialog.setVisible(true);
 	}
 
 	private void manageAcceptAction() {
 		try {
-			if(operatingSystem.verifyProcessName(addProcessDialog.getProcessName())){
-				operatingSystem.addProcess(new MyProcess(addProcessDialog.getProcessName(), addProcessDialog.getProcessTime(),
-						addProcessDialog.getIsBlocked()));
-				addProcessDialog.dispose();
-				mainFrame.updateProcesses(operatingSystem.getProcessInfo());
-			}else{
-				JOptionPane.showMessageDialog(mainFrame, "Nombre de proceso no disponible", "ERROR!!!", JOptionPane.ERROR_MESSAGE);
-			}
+			operatingSystem.verifyProcessName(addProcessDialog.getProcessName());
+			operatingSystem.addProcess(new MyProcess(addProcessDialog.getProcessName(), addProcessDialog.getProcessTime(),
+													addProcessDialog.getIsBlocked()));
+			addProcessDialog.dispose();
+			mainFrame.updateProcesses(operatingSystem.getProcessQueue());
 		} catch (NumberFormatException e) {
-			JOptionPane.showMessageDialog(mainFrame, "Debe ingresar unicamente numeros", "ERROR!!!", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(mainFrame, "Debe ingresar unicamente numeros", "ERROR!!!",
+					JOptionPane.ERROR_MESSAGE);
 		} catch (Exception ne){
 			JOptionPane.showMessageDialog(mainFrame, ne.getMessage(), "ERROR!!!", JOptionPane.ERROR_MESSAGE);
 		}
@@ -87,16 +91,58 @@ public class Presenter implements ActionListener {
 	}
 
 	private void manageInitAction() {
-		operatingSystem.startSimulation();
-		mainFrame.initReportsPanel(operatingSystem.getReadyProccess(), operatingSystem.getProcessDespachados(),
-				operatingSystem.getExecuting(), operatingSystem.getProcessToLocked(), operatingSystem.getProcessLocked(),
-				operatingSystem.getProcessWakeUp(), operatingSystem.getProcessExpired(), operatingSystem.getProcessTerminated());
+		if (!operatingSystem.getProcessQueue().isEmpty()){
+			operatingSystem.startSimulation();
+			mainFrame.initReportsPanel(operatingSystem.getReadyProccess(), operatingSystem.getProcessDespachados(),
+					operatingSystem.getExecuting(), operatingSystem.getProcessToLocked(), operatingSystem.getProcessLocked(),
+					operatingSystem.getProcessWakeUp(), operatingSystem.getProcessExpired(), operatingSystem.getProcessTerminated());
+		}else{
+			JOptionPane.showMessageDialog(mainFrame, "Debe haber almenos 1 proceso para poder iniciar la simulacion",
+					"Error", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 
 	private void manageNewSimulationAction() {
 		operatingSystem = new OperatingSystem();
-		Object[][] empty = {};
-		mainFrame.updateProcesses(empty);
-		mainFrame.initStartSimulationPanel(this);
+		mainFrame.newSimulation();
+	}
+
+	private void manageDeleteAction(ActionEvent event) {
+		String processName = ((JButton) event.getSource()).getName();
+		operatingSystem.deleteProccess(processName);
+		mainFrame.updateProcesses(operatingSystem.getProcessQueue());
+	}
+
+	private void manageEditAction(ActionEvent event) {
+		String processName = ((JButton) event.getSource()).getName();
+		editProcessDialog = new AddProcessDialog(this, true);
+		MyProcess process = operatingSystem.search(processName);
+		editProcessDialog.setInitialInfo(process.getName(), String.valueOf((int) process.getTime()), process.isLocked());
+		editProcessDialog.setVisible(true);
+	}
+
+	private void manageAcceptEditAction(ActionEvent event) {
+		try {
+			String actualName = ((JButton) event.getSource()).getName();
+			if(!actualName.equals(editProcessDialog.getProcessName())){
+				operatingSystem.verifyProcessName(editProcessDialog.getProcessName());
+			}
+			operatingSystem.editProcess(actualName, editProcessDialog.getProcessName(),
+										editProcessDialog.getProcessTime(), editProcessDialog.getIsBlocked());
+			editProcessDialog.dispose();
+			mainFrame.updateProcesses(operatingSystem.getProcessQueue());
+		} catch (NumberFormatException e) {
+			JOptionPane.showMessageDialog(mainFrame, "Debe ingresar unicamente numeros", "ERROR!!!",
+					JOptionPane.ERROR_MESSAGE);
+		} catch (Exception ne){
+			JOptionPane.showMessageDialog(mainFrame, ne.getMessage(), "ERROR!!!", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
+	private void manageCancelEditAction() {
+		editProcessDialog.dispose();
+	}
+
+	private void manageExportAction() {
 	}
 }

@@ -29,6 +29,10 @@ public class MyProcess {
 		this.time = (this.time-time);
 	}
 
+	public void updateTime(int time){
+		this.time = time;
+	}
+
 	public boolean isLocked() {
 		return locked;
 	}

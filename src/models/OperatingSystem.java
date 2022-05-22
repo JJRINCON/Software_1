@@ -11,7 +11,6 @@ public class OperatingSystem {
 	private ArrayList<MyProcess> executing;
 	private ArrayList<MyProcess> expired;
 	private ArrayList<MyProcess> processTerminated;
-	private MyProcess processInExecition;
 
 	public OperatingSystem() {
 		this.processQueueReady = new Queue<>();
@@ -45,7 +44,7 @@ public class OperatingSystem {
 	
 	private void edit(MyProcess myProcess, String name, int time, boolean lockedStatus) {
 		myProcess.setName(name);
-		myProcess.setTime(time);
+		myProcess.updateTime(time);
 		myProcess.setLocked(lockedStatus);
 	}
 	
@@ -78,8 +77,7 @@ public class OperatingSystem {
 		}
 		return isDelete;
 	}
-	
-	
+
 	private MyProcess searchInList(String name, ArrayList<MyProcess> myProcesses) {
 		for (MyProcess myProcess : myProcesses) {
 			if (name.equals(myProcess.getName())) {
@@ -90,7 +88,7 @@ public class OperatingSystem {
 	}
 	
 	
-	private MyProcess search(String name) {
+	public MyProcess search(String name) {
 		Node<MyProcess> temp = processQueueReady.peek();
 		while (temp != null) {
 			if (temp.getData().getName().equals(name)) {
@@ -135,7 +133,6 @@ public class OperatingSystem {
 		}
 	}
 
-
 	/**
 	 * 
 	 * @return Los procesos que se van agregando a la lista, estos toca ir actualizando
@@ -145,49 +142,20 @@ public class OperatingSystem {
 		return processQueueReady;
 	}
 
-	public Object[][] getProcessInfo(){
-		Object[][] processInfo = new Object[processQueueReady.size()][3];
-		Node<MyProcess> temp = processQueueReady.peek();
-		int count = 0;
-		while (temp != null) {
-			proccesInfo(processInfo, temp, count);
-			temp = temp.getNext();
-			count++;
-		}
-		return processInfo;
-	}
-
-	private void proccesInfo(Object[][] processInfo, Node<MyProcess> temp, int count) {
-		processInfo[count][0] = temp.getData().getName();
-		processInfo[count][1] = temp.getData().getTime();
-		processInfo[count][2] = temp.getData().isLocked();
-	}
-
-	public boolean verifyProcessName(String name) throws Exception {
+	public void verifyProcessName(String name) throws Exception {
 		Node<MyProcess> temp = processQueueReady.peek();
 		boolean aux = true;
 		while(temp != null){
 			if(temp.getData().getName().equals(name)){
-				aux = false;
+				throw new Exception("Nombre de proceso no disponible");
 			}
 			temp = temp.getNext();
 		}
-		return aux;
 	}
 
-	public MyProcess getProcessInExecition() {
-		return processInExecition;
-	}
 
 	public ArrayList<MyProcess> getProcessQueueLocked() {
 		return lockedAndWakeUp;
-	}
-
-	public void delete(String name) {
-		Node<MyProcess> temp = processQueueReady.peek();
-		if (temp.getData().getName().equals(name)) {
-
-		}
 	}
 
 	/**
@@ -263,6 +231,4 @@ public class OperatingSystem {
 		}
 		return processInfo;
 	}
-	
-	
 }

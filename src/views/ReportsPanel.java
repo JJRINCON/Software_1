@@ -57,14 +57,15 @@ public class ReportsPanel extends JPanel {
 
     private void initTitle(ActionListener listener){
         MyGridPanel titlePanel = new MyGridPanel();
-        titlePanel.setBackground(Color.decode("#FDFEFE"));
+        titlePanel.setBackground(Color.decode("#16A085"));
         JLabel titleLb = new JLabel("REPORTES");
+        titleLb.setForeground(Color.WHITE);
         titleLb.setFont(new Font("Arial", Font.BOLD, 20));
         titleLb.setHorizontalAlignment(SwingConstants.CENTER);
         add(titleLb, BorderLayout.NORTH);
         titlePanel.addComponent(titleLb, 3, 1, 6, 0.1);
-        JButton exitBtn = createBtn("Salir", Color.RED, listener, Events.EXIT.toString());
-        titlePanel.addComponent(exitBtn, 10, 1, 2, 0.1);
+        JButton exportBtn = createBtn("Exportar a PDF", Color.decode("#2980B9"), listener, Events.EXPORT.toString());
+        titlePanel.addComponent(exportBtn, 10, 1, 2, 0.1);
         add(titlePanel, BorderLayout.NORTH);
     }
 

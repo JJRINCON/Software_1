@@ -1,6 +1,7 @@
 package views;
 
 import models.MyProcess;
+import models.Queue;
 import presenters.Events;
 
 import javax.swing.*;
@@ -18,23 +19,30 @@ public class MainPanel extends MyGridPanel {
     public MainPanel(ActionListener listener) {
         this.listener = listener;
         setBackground(Color.decode("#FDFEFE"));
+        initExitBtn();
         processesPanel = new ProcessesPanel(listener);
-        addComponent(processesPanel, 0, 2, 1, 1);
-        initStartSimulationPanel(listener);
+        addComponent(processesPanel, 0, 1, 2, 1);
+        initStartSimulationPanel();
     }
 
-    public void initStartSimulationPanel(ActionListener listener){
+    private void initExitBtn(){
+        MyGridPanel exitBtnPanel = new MyGridPanel();
+        exitBtnPanel.setBackground(Color.decode("#34495E"));
+        JButton exitBtn = createBtn("Salir", Color.RED, listener, Events.EXIT.toString());
+        exitBtnPanel.addComponentWithInsets(exitBtn, 11, 1, 1, 0.1, new Insets(5,0,5,0));
+        addComponent(exitBtnPanel, 0,0, 12, 0.005);
+    }
+
+    public void initStartSimulationPanel(){
         hideReportsPanel();
         startSimulationPanel = new MyGridPanel();
         JButton startSimulationBtn = createBtn("Iniciar Simulacion", Color.decode("#2980B9"),
                                                 listener, Events.INIT.toString());
         startSimulationPanel.setBackground(Color.decode("#FDFEFE"));
-        JButton exitBtn = createBtn("Salir", Color.RED, listener, Events.EXIT.toString());
-        startSimulationPanel.addComponent(exitBtn, 10, 2, 2, 0.005);
-        startSimulationPanel.addComponent(new JLabel(" "), 1, 3, 12, 0.3);
-        startSimulationPanel.addComponent(startSimulationBtn, 4, 4, 6, 0.05);
-        startSimulationPanel.addComponent(new JLabel(" "), 1, 5, 12, 0.4);
-        addComponent(startSimulationPanel, 2, 2, 9, 1);
+        startSimulationPanel.addComponent(new JLabel(" "), 0, 3, 12, 0.3);
+        startSimulationPanel.addComponent(startSimulationBtn, 5, 4, 5, 0.05);
+        startSimulationPanel.addComponent(new JLabel(" "), 0, 5, 12, 0.4);
+        addComponent(startSimulationPanel, 2, 1, 9, 1);
         updateUI();
     }
 
@@ -49,9 +57,12 @@ public class MainPanel extends MyGridPanel {
                                  ArrayList<MyProcess> lockedProcess, ArrayList<MyProcess> wakeUpProcess,
                                  ArrayList<MyProcess> expiredProcess, ArrayList<MyProcess> terminatedProcess){
         this.remove(startSimulationPanel);
+        this.remove(processesPanel);
+        processesPanel.setBorder(BorderFactory.createMatteBorder(2, 2,2,0, Color.BLACK));
+        addComponent(processesPanel, 0, 1, 3, 1);
         reportsPanel = new ReportsPanel(readyProcess, dispatchedProcess, executingProcess, toLockedProcess,
                                         lockedProcess, wakeUpProcess, expiredProcess, terminatedProcess, listener);
-        addComponent(reportsPanel, 1,2,11,0.8);
+        addComponent(reportsPanel, 3,1,9,0.8);
         updateUI();
     }
 
@@ -65,7 +76,7 @@ public class MainPanel extends MyGridPanel {
         return btn;
     }
 
-    public void updateProcesses(Object[][] info){
-        processesPanel.updateProcesses(info);
+    public void updateProcesses(Queue<MyProcess> processQueue){
+        processesPanel.updateProcesses(processQueue);
     }
 }
