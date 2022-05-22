@@ -2,9 +2,12 @@ package presenters;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
 
 import javax.swing.*;
 
+import com.itextpdf.text.DocumentException;
+import models.GeneratePDF;
 import models.MyProcess;
 import models.OperatingSystem;
 import views.AddProcessDialog;
@@ -144,5 +147,15 @@ public class Presenter implements ActionListener {
 	}
 
 	private void manageExportAction() {
+		try {
+			GeneratePDF.createPDF(operatingSystem.getReadyProccess(), operatingSystem.getProcessDespachados(),
+					operatingSystem.getExecuting(), operatingSystem.getProcessToLocked(), operatingSystem.getProcessLocked(),
+					operatingSystem.getProcessWakeUp(), operatingSystem.getProcessExpired(), operatingSystem.getProcessTerminated());
+			JOptionPane.showMessageDialog(mainFrame, "Archivo PDF generado con exito", "PDF", JOptionPane.INFORMATION_MESSAGE);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (DocumentException e) {
+			e.printStackTrace();
+		}
 	}
 }
