@@ -5,30 +5,23 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
-import javax.swing.filechooser.FileSystemView;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 
 public class GeneratePDF {
 
-    private static final String PDF_PATH = FileSystemView.getFileSystemView().getHomeDirectory().getAbsolutePath() + "/reportes/report.pdf";
     private static final Font titleFont = new Font(Font.FontFamily.TIMES_ROMAN,30,Font.BOLD);
     private static final Font categoryFont = new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.BOLD);
     private static final Font headerTitleFont = new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.BOLD);
 
-    public static void createPDF(ArrayList<MyProcess> readyProcess, ArrayList<MyProcess> dispatchedProcess,
+    public static void createPDF(String filePath, ArrayList<MyProcess> readyProcess, ArrayList<MyProcess> dispatchedProcess,
                                  ArrayList<MyProcess> executingProcess, ArrayList<MyProcess> toLockedProcess,
                                  ArrayList<MyProcess> lockedProcess, ArrayList<MyProcess> wakeUpProcess,
                                  ArrayList<MyProcess> expiredProcess, ArrayList<MyProcess> terminatedProcess)
             throws FileNotFoundException, DocumentException {
         Document document = new Document();
-        File reportsFile = new File(FileSystemView.getFileSystemView().getHomeDirectory().getAbsolutePath() + "/reportes");
-        if (!reportsFile.exists()){
-            reportsFile.mkdir();
-        }
-        PdfWriter.getInstance(document, new FileOutputStream(PDF_PATH));
+        PdfWriter.getInstance(document, new FileOutputStream(filePath + ".pdf"));
         document.open();
         addFirstPage(document);
         addInfo(readyProcess, document, "Listado de procesos Listos", 1);

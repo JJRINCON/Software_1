@@ -48,4 +48,12 @@ public class MainFrame extends JFrame {
         add(mainPanel);
         getContentPane().revalidate();
     }
+
+    public String getPdfPath() throws Exception {
+        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setBackground(Color.WHITE);
+        fileChooser.showOpenDialog(this);
+        return fileChooser.getSelectedFile().getPath();
+    }
 }
